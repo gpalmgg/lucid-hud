@@ -1,0 +1,20 @@
+{
+  "name": "lucid-hud",
+  "owner": {
+    "name": "Gustaf Palm",
+    "email": "gustafmpalm@gmail.com"
+  },
+  "metadata": {
+    "description": "Real-time statusline HUD for Claude Code with cost, cache, and efficiency intelligence (fork of claude-hud by Jarrod Watts)",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "lucid-hud",
+      "source": "./",
+      "description": "Real-time statusline showing context usage, session cost, cache hit ratio, efficiency colors, active tools, running agents, and todo progress.",
+      "category": "monitoring",
+      "tags": ["hud", "statusline", "monitoring", "context", "cost", "cache", "tools", "agents", "todos"]
+    }
+  ]
+}
