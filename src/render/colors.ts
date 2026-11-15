@@ -1,3 +1,4 @@
+import { gradientBar } from '../vibes.js';
 import type { HudColorName, HudColorValue, HudColorOverrides } from '../config.js';
 
 export const RESET = '\x1b[0m';
@@ -135,7 +136,8 @@ export function getQuotaColor(percent: number, colors?: Partial<HudColorOverride
   return resolveAnsi(colors?.usage, BRIGHT_BLUE);
 }
 
-export function quotaBar(percent: number, width: number = 10, colors?: Partial<HudColorOverrides>): string {
+export function quotaBar(percent: number, width: number = 10, colors?: Partial<HudColorOverrides>, gradient = false): string {
+  if (gradient) return gradientBar(percent, width);
   const safeWidth = Number.isFinite(width) ? Math.max(0, Math.round(width)) : 0;
   const safePercent = Number.isFinite(percent) ? Math.min(100, Math.max(0, percent)) : 0;
   const filled = Math.round((safePercent / 100) * safeWidth);
@@ -144,7 +146,8 @@ export function quotaBar(percent: number, width: number = 10, colors?: Partial<H
   return `${color}${'█'.repeat(filled)}${DIM}${'░'.repeat(empty)}${RESET}`;
 }
 
-export function coloredBar(percent: number, width: number = 10, colors?: Partial<HudColorOverrides>): string {
+export function coloredBar(percent: number, width: number = 10, colors?: Partial<HudColorOverrides>, gradient = false): string {
+  if (gradient) return gradientBar(percent, width);
   const safeWidth = Number.isFinite(width) ? Math.max(0, Math.round(width)) : 0;
   const safePercent = Number.isFinite(percent) ? Math.min(100, Math.max(0, percent)) : 0;
   const filled = Math.round((safePercent / 100) * safeWidth);

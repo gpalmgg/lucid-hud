@@ -25,7 +25,7 @@ export function renderSessionLine(ctx: RenderContext): string {
 
   const colors = ctx.config?.colors;
   const barWidth = getAdaptiveBarWidth();
-  const bar = coloredBar(percent, barWidth, colors);
+  const bar = coloredBar(percent, barWidth, colors, ctx.config?.display?.gradientBars);
 
   const parts: string[] = [];
   const display = ctx.config?.display;
@@ -158,6 +158,7 @@ export function renderSessionLine(ctx: RenderContext): string {
         const usageBarEnabled = display?.usageBarEnabled ?? true;
         if (fiveHour === null && sevenDay !== null) {
           const weeklyOnlyPart = formatUsageWindowPart({
+      gradient: ctx.config?.display?.gradientBars,
             label: '7d',
             percent: sevenDay,
             resetAt: ctx.usageData.sevenDayResetAt,
@@ -169,6 +170,7 @@ export function renderSessionLine(ctx: RenderContext): string {
           parts.push(weeklyOnlyPart);
         } else {
           const fiveHourPart = formatUsageWindowPart({
+      gradient: ctx.config?.display?.gradientBars,
             label: '5h',
             percent: fiveHour,
             resetAt: ctx.usageData.fiveHourResetAt,
@@ -180,6 +182,7 @@ export function renderSessionLine(ctx: RenderContext): string {
           const sevenDayThreshold = display?.sevenDayThreshold ?? 80;
           if (sevenDay !== null && sevenDay >= sevenDayThreshold) {
             const sevenDayPart = formatUsageWindowPart({
+      gradient: ctx.config?.display?.gradientBars,
               label: '7d',
               percent: sevenDay,
               resetAt: ctx.usageData.sevenDayResetAt,
@@ -284,6 +287,7 @@ function formatUsageWindowPart({
   usageBarEnabled,
   barWidth,
   forceLabel = false,
+  gradient = false,
 }: {
   label: '5h' | '7d';
   percent: number | null;
@@ -292,14 +296,15 @@ function formatUsageWindowPart({
   usageBarEnabled: boolean;
   barWidth: number;
   forceLabel?: boolean;
+  gradient?: boolean;
 }): string {
   const usageDisplay = formatUsagePercent(percent, colors);
   const reset = formatResetTime(resetAt);
 
   if (usageBarEnabled) {
     const body = reset
-      ? `${quotaBar(percent ?? 0, barWidth, colors)} ${usageDisplay} (${reset} / ${label})`
-      : `${quotaBar(percent ?? 0, barWidth, colors)} ${usageDisplay}`;
+      ? `${quotaBar(percent ?? 0, barWidth, colors, gradient)} ${usageDisplay} (${reset} / ${label})`
+      : `${quotaBar(percent ?? 0, barWidth, colors, gradient)} ${usageDisplay}`;
     return forceLabel ? `${label}: ${body}` : body;
   }
 

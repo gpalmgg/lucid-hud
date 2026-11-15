@@ -91,6 +91,9 @@ export interface HudConfig {
     showStuck: boolean;
     showCompactNudge: boolean;
     showActiveClaudeMd: boolean;
+    showVibes: boolean;
+    vibeSounds: boolean;
+    gradientBars: boolean;
   };
   colors: HudColorOverrides;
 }
@@ -138,6 +141,9 @@ export const DEFAULT_CONFIG: HudConfig = {
     showStuck: false,
     showCompactNudge: false,
     showActiveClaudeMd: false,
+    showVibes: false,
+    vibeSounds: false,
+    gradientBars: false,
   },
   colors: {
     context: 'green',
@@ -375,6 +381,15 @@ export function mergeConfig(userConfig: Partial<HudConfig>): HudConfig {
     showActiveClaudeMd: typeof migrated.display?.showActiveClaudeMd === 'boolean'
       ? migrated.display.showActiveClaudeMd
       : DEFAULT_CONFIG.display.showActiveClaudeMd,
+    showVibes: typeof migrated.display?.showVibes === 'boolean'
+      ? migrated.display.showVibes
+      : DEFAULT_CONFIG.display.showVibes,
+    vibeSounds: typeof migrated.display?.vibeSounds === 'boolean'
+      ? migrated.display.vibeSounds
+      : DEFAULT_CONFIG.display.vibeSounds,
+    gradientBars: typeof migrated.display?.gradientBars === 'boolean'
+      ? migrated.display.gradientBars
+      : DEFAULT_CONFIG.display.gradientBars,
   };
 
   const colors = {

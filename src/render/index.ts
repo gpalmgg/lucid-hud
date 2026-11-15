@@ -1,3 +1,4 @@
+import { renderVibeLines } from '../vibes.js';
 import type { HudElement } from '../config.js';
 import { DEFAULT_ELEMENT_ORDER } from '../config.js';
 import type { RenderContext } from '../types.js';
@@ -428,6 +429,13 @@ export function render(ctx: RenderContext): void {
   if (lineLayout === 'expanded') {
     const renderedLines = renderExpanded(ctx);
     lines = renderedLines.map(({ line }) => line);
+    if (ctx.config?.display?.showVibes) {
+      try {
+        lines.unshift(...renderVibeLines(ctx.sessionState?.sessionId, ctx.stdin.cost?.total_cost_usd ?? 0));
+      } catch {
+        /* vibes are best-effort */
+      }
+    }
 
     if (showSeparators) {
       const firstActivityIndex = renderedLines.findIndex(({ isActivity }) => isActivity);

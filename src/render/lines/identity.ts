@@ -4,6 +4,7 @@ import { coloredBar, label, getContextColor, getEfficiencyColor, RESET } from '.
 import { getAdaptiveBarWidth } from '../../utils/terminal.js';
 import { detectStuckStreak } from '../../stuck.js';
 import { getPetMood, renderPet } from '../../pet.js';
+import { renderAnimatedPet, petMoodTransition } from '../../vibes.js';
 
 const DEBUG = process.env.DEBUG?.includes('lucid-hud') || process.env.DEBUG === '*';
 
@@ -30,7 +31,7 @@ export function renderIdentityLine(ctx: RenderContext): string {
   const contextValueDisplay = `${getContextColor(percent, colors)}${contextValue}${RESET}`;
 
   let line = display?.showContextBar !== false
-    ? `${label('Context', colors)} ${coloredBar(percent, getAdaptiveBarWidth(), colors)} ${contextValueDisplay}`
+    ? `${label('Context', colors)} ${coloredBar(percent, getAdaptiveBarWidth(), colors, ctx.config?.display?.gradientBars)} ${contextValueDisplay}`
     : `${label('Context', colors)} ${contextValueDisplay}`;
 
   // Token count — always appended in parens
@@ -88,7 +89,12 @@ export function renderIdentityLine(ctx: RenderContext): string {
   // HUD pet (L2-4) — always last, so it floats at the end of the line
   if (display?.showPet) {
     const mood = getPetMood(ctx.transcript, percent, null);
-    line += ` ${label(renderPet(mood), colors)}`;
+    if (display.showVibes) {
+      petMoodTransition(ctx.sessionState?.sessionId, mood, display.vibeSounds);
+      line += ` ${renderAnimatedPet(mood)}`;
+    } else {
+      line += ` ${label(renderPet(mood), colors)}`;
+    }
   }
 
   // Legacy token breakdown at >85% (keep backward compat for users who don't enable new features)
